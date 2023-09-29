@@ -1,5 +1,18 @@
 version: "3.3"
 services:
+  cloudflared:
+    image: cloudflare/cloudflared
+    container_name: cloudflare-tunnel
+    restart: unless-stopped
+    command: tunnel run
+    env_file:
+      - ./tunnel.env
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   starlink_exporter:
     image: "ghcr.io/danopstech/starlink_exporter:latest"
     restart: always
@@ -41,12 +54,14 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_INSTALL_PLUGINS=ae3e-plotly-panel
       - GF_LOG_CONSOLE_LEVEL=warn
     volumes:
       - type: bind
         source: ./data/grafana
         target: /var/lib/grafana
       - type: bind
-        source: ./config/grafana/provisioning
+        source: ./config/grafana
         target: /etc/grafana/provisioning/
+secrets:
+  tunnel_key:
+    file: tunnel_key.txt
