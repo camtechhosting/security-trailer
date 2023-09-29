@@ -1,0 +1,23 @@
+global:
+  scrape_interval:     1m
+  evaluation_interval: 1m
+  scrape_timeout:      10s
+
+scrape_configs:
+  - job_name: 'starlink'
+    scrape_interval: 3s
+    scrape_timeout:  3s
+    static_configs:
+      - targets: ['starlink_exporter:9010']
+
+  - job_name: 'speedtest'
+    scrape_interval: 60m
+    scrape_timeout: 70s
+    static_configs:
+      - targets: [ 'speedtest_exporter:9011' ]
+
+  - job_name: 'solar'
+    scrape_interval: 10m
+    scrape_timeout: 10s
+    static_configs:
+      - targets: [ 'renogybt_exporter:9012' ]
