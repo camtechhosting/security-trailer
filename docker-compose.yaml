@@ -16,12 +16,16 @@ services:
   starlink_exporter:
     image: "ghcr.io/danopstech/starlink_exporter:latest"
     restart: always
+    networks:
+      - monitors
     ports:
       - "9010:9817"
 
   speedtest_exporter:
     image: "ghcr.io/danopstech/speedtest_exporter:latest"
     restart: always
+    networks:
+      - monitors
     ports:
       - "9011:9090"
 
@@ -30,6 +34,8 @@ services:
     restart: always
     volumes:
       - /run/dbus:/run/dbus:ro
+    networks:
+      - monitors
     ports:
       - "9012:9030"
 
@@ -37,6 +43,8 @@ services:
     image: "ghcr.io/danopstech/prometheus:latest"
     restart: always
     user: "root"
+    networks:
+      - monitors
     ports:
       - "9020:9090"
     volumes:
@@ -51,6 +59,8 @@ services:
     image: "ghcr.io/danopstech/grafana:latest"
     restart: always
     user: "root"
+    networks:
+      - monitors
     ports:
       - "3000:3000"
     environment:
@@ -65,3 +75,6 @@ services:
 secrets:
   tunnel_key:
     file: tunnel_key.txt
+
+networks:
+  monitors:
